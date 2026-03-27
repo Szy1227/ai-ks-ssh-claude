@@ -12,20 +12,18 @@ NC='\033[0m'
 # PS1 提示符
 export PS1='\[\033[01;32m\]\u@ai-ks\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 
+# 工作目录快捷函数（函数在非交互式 shell 也可用）
+cdfastapi() { cd /work/fastapi; }
+cdvue() { cd /work/vue; }
+cdwork() { cd /work; }
+
 # 常用别名
 alias ll='ls -la'
 alias la='ls -A'
 alias l='ls -CF'
-alias ..='cd ..'
-alias ...='cd ../..'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
-
-# 工作目录别名
-alias cdfastapi='cd /work/fastapi'
-alias cdvue='cd /work/vue'
-alias cdwork='cd /work'
 
 # Git 别名
 alias gs='git status'
@@ -50,8 +48,6 @@ alias nr='npm run'
 alias nd='npm run dev'
 alias nb='npm run build'
 
-# 快捷函数
-
 # 查看当前节点信息
 node-info() {
     echo -e "${CYAN}=== AI-KS 节点信息 ===${NC}"
@@ -70,14 +66,6 @@ node-info() {
         local version=$(grep -oP '"version":\s*"\K[^"]+' /work/vue/package.json 2>/dev/null || echo "未知")
         echo -e "  - 前端版本: ${GREEN}${version}${NC}"
     fi
-}
-
-# 快速启动开发环境
-dev-start() {
-    echo -e "${CYAN}启动开发环境...${NC}"
-    echo -e "${YELLOW}提示: 请在宿主机上访问服务${NC}"
-    echo -e "  - 前端: http://<宿主机>:13100"
-    echo -e "  - 后端: http://<宿主机>:18100"
 }
 
 # 显示帮助
