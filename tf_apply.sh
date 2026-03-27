@@ -3,7 +3,14 @@ set -euo pipefail
 
 # Terraform apply 脚本
 # 用法:
-#   ./tf_apply.sh [SSH_PORT]
+#   ./tf_apply.sh [--clean] [SSH_PORT]
+#   --clean  先 terraform destroy 再 apply（仅需要彻底重装时用，会慢）
+
+DESTROY_FIRST=0
+if [[ "${1:-}" == "--clean" ]] || [[ "${1:-}" == "-c" ]]; then
+  DESTROY_FIRST=1
+  shift
+fi
 
 PORT="${1:-22001}"
 USERNAME="ks"
@@ -50,8 +57,9 @@ tf_destroy() {
   terraform destroy -auto-approve
 }
 
-# 与现有模板保持一致：apply 前先尝试清理旧资源
-tf_destroy || true
+if [[ "$DESTROY_FIRST" -eq 1 ]]; then
+  tf_destroy || true
+fi
 tf_init
 tf_apply
 

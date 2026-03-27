@@ -43,10 +43,8 @@ resource "docker_image" "ssh_claude_image" {
     context    = path.module
     dockerfile = "Dockerfile"
     build_args = {
-      USERNAME   = var.username
-      USERUID    = tostring(var.user_uid)
-      SSH_PORT   = tostring(var.external_port)
-      USERPASSWD = var.user_password
+      USERNAME = var.username
+      USERUID  = tostring(var.user_uid)
     }
   }
 }
@@ -62,4 +60,6 @@ resource "docker_container" "ssh_claude" {
     internal = 22
     external = var.external_port
   }
+
+  env = ["USERPASSWD=${var.user_password}"]
 }
