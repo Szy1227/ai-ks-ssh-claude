@@ -66,10 +66,11 @@ else
 fi
 
 tf_init() {
-  # 两种：ai-ks-design provision 克隆 ai-ks-tools 后的 workspace/plugins；否则默认 terraform init
+  # 两种：TF_INIT_PLUGIN_DIR；或 workspace/ai-ks-tools/terraform/plugins（相对 node-<N>/本仓库）
   local plugin_dir="${TF_INIT_PLUGIN_DIR:-}"
-  if [[ -z "$plugin_dir" || ! -d "$plugin_dir" ]] && [[ -d "${SCRIPT_DIR}/../../plugins" ]]; then
-    plugin_dir="$(cd "${SCRIPT_DIR}/../.." && pwd)/plugins"
+  local ws_tools="${SCRIPT_DIR}/../../ai-ks-tools/terraform/plugins"
+  if [[ -z "$plugin_dir" || ! -d "$plugin_dir" ]] && [[ -d "$ws_tools" ]]; then
+    plugin_dir="$(cd "${SCRIPT_DIR}/../.." && pwd)/ai-ks-tools/terraform/plugins"
   fi
   if [[ -n "$plugin_dir" && -d "$plugin_dir" ]]; then
     terraform init -plugin-dir="$plugin_dir"
