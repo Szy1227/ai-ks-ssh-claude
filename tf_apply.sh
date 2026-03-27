@@ -68,6 +68,8 @@ fi
 tf_init() {
   if [ -d "./plugins" ]; then
     terraform init -plugin-dir=./plugins
+  elif [ -d "${HOME}/.terraform-plugins" ]; then
+    terraform init -plugin-dir="${HOME}/.terraform-plugins"
   else
     terraform init
   fi
