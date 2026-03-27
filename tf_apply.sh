@@ -66,10 +66,19 @@ else
 fi
 
 tf_init() {
+  # 插件目录优先级: 项目 ./plugins > 环境变量 TF_INIT_PLUGIN_DIR > workspace/plugins（与 node-<N> 同级）> ~/.terraform-plugins
+  local plugin_dir=""
   if [ -d "./plugins" ]; then
-    terraform init -plugin-dir=./plugins
+    plugin_dir="./plugins"
+  elif [ -n "${TF_INIT_PLUGIN_DIR:-}" ] && [ -d "${TF_INIT_PLUGIN_DIR}" ]; then
+    plugin_dir="${TF_INIT_PLUGIN_DIR}"
+  elif [ -d "${SCRIPT_DIR}/../../plugins" ]; then
+    plugin_dir="$(cd "${SCRIPT_DIR}/../.." && pwd)/plugins"
   elif [ -d "${HOME}/.terraform-plugins" ]; then
-    terraform init -plugin-dir="${HOME}/.terraform-plugins"
+    plugin_dir="${HOME}/.terraform-plugins"
+  fi
+  if [ -n "$plugin_dir" ]; then
+    terraform init -plugin-dir="$plugin_dir"
   else
     terraform init
   fi
