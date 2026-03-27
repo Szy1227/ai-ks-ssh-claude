@@ -17,9 +17,6 @@ TF_VAR_USERNAME="username=${USERNAME}"
 calc_password() {
   local passwd="$1"
   local i
-  if [[ "$passwd" == "devops" ]]; then
-    passwd="devops-${PORT}"
-  fi
   if [[ ! "$passwd" =~ user ]]; then
     i=32
     while ((i > 0)); do
@@ -30,6 +27,9 @@ calc_password() {
   fi
   printf "%s" "$passwd"
 }
+
+PASSWD="$(calc_password "$USERNAME")"
+TF_VAR_USER_PASSWORD="user_password=${PASSWD}"
 
 tf_init() {
   if [ -d "./plugins" ]; then
@@ -42,7 +42,8 @@ tf_init() {
 tf_apply() {
   terraform apply -auto-approve \
     -var "$TF_VAR_EXTERNAL_PORT" \
-    -var "$TF_VAR_USERNAME"
+    -var "$TF_VAR_USERNAME" \
+    -var "$TF_VAR_USER_PASSWORD"
 }
 
 tf_destroy() {
@@ -55,7 +56,6 @@ tf_init
 tf_apply
 
 HOST_ADDR="$(hostname -I | awk '{print $1}')"
-PASSWD="$(calc_password "$USERNAME")"
 
 echo ""
 echo "===== SSH Login Info ====="

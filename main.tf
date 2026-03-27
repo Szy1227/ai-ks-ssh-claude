@@ -29,6 +29,12 @@ variable "user_uid" {
   description = "容器内用户 UID"
 }
 
+variable "user_password" {
+  type        = string
+  default     = "ks"
+  description = "SSH 登录密码"
+}
+
 resource "docker_image" "ssh_claude_image" {
   name         = "ai-ks-ssh-claude:latest"
   keep_locally = true
@@ -37,9 +43,10 @@ resource "docker_image" "ssh_claude_image" {
     context    = path.module
     dockerfile = "Dockerfile"
     build_args = {
-      USERNAME = var.username
-      USERUID  = tostring(var.user_uid)
-      SSH_PORT = tostring(var.external_port)
+      USERNAME   = var.username
+      USERUID    = tostring(var.user_uid)
+      SSH_PORT   = tostring(var.external_port)
+      USERPASSWD = var.user_password
     }
   }
 }
