@@ -5,7 +5,7 @@ set -euo pipefail
 # 用法:
 #   ./tf_apply.sh [--clean] [SSH_PORT]
 #   --clean  先 terraform destroy 再 apply（仅需要彻底重装时用，会慢）
-
+#
 DESTROY_FIRST=0
 if [[ "${1:-}" == "--clean" ]] || [[ "${1:-}" == "-c" ]]; then
   DESTROY_FIRST=1
@@ -37,6 +37,7 @@ calc_password() {
 
 PASSWD="$(calc_password "$USERNAME")"
 TF_VAR_USER_PASSWORD="user_password=${PASSWD}"
+TF_VAR_MOUNTS='mounts=[]'
 
 tf_init() {
   if [ -d "./plugins" ]; then
@@ -50,7 +51,8 @@ tf_apply() {
   terraform apply -auto-approve \
     -var "$TF_VAR_EXTERNAL_PORT" \
     -var "$TF_VAR_USERNAME" \
-    -var "$TF_VAR_USER_PASSWORD"
+    -var "$TF_VAR_USER_PASSWORD" \
+    -var "$TF_VAR_MOUNTS"
 }
 
 tf_destroy() {

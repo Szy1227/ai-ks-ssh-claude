@@ -35,6 +35,26 @@ variable "user_password" {
   description = "SSH 登录密码"
 }
 
+variable "mounts" {
+  type = list(object({
+    host_path      = string
+    container_path = string
+    read_only      = optional(bool, false)
+  }))
+  default     = []
+  description = "宿主机目录挂载列表；host_path 以 / 开头为绝对路径，否则相对本模块目录（path.module）"
+}
+
+locals {
+  resolved_mounts = [
+    for m in var.mounts : {
+      host_path      = startswith(m.host_path, "/") ? abspath(m.host_path) : abspath("${path.module}/${m.host_path}")
+      container_path = m.container_path
+      read_only      = m.read_only
+    }
+  ]
+}
+
 resource "docker_image" "ssh_claude_image" {
   name         = "ai-ks-ssh-claude:latest"
   keep_locally = true
@@ -62,4 +82,13 @@ resource "docker_container" "ssh_claude" {
   }
 
   env = ["USERPASSWD=${var.user_password}"]
+
+  dynamic "volumes" {
+    for_each = local.resolved_mounts
+    content {
+      host_path      = volumes.value.host_path
+      container_path = volumes.value.container_path
+      read_only      = volumes.value.read_only
+    }
+  }
 }
