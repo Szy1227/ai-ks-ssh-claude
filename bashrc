@@ -13,9 +13,9 @@ NC='\033[0m'
 export PS1='\[\033[01;32m\]\u@ai-ks\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 
 # 工作目录快捷函数（函数在非交互式 shell 也可用）
-cdfastapi() { cd /work/fastapi; }
-cdvue() { cd /work/vue; }
-cdwork() { cd /work; }
+cdfastapi() { cd /home/ai-ks/fastapi; }
+cdvue() { cd /home/ai-ks/vue; }
+cdwork() { cd /home/ai-ks; }
 
 # 常用别名
 alias ll='ls -la'
@@ -54,16 +54,16 @@ node-info() {
     echo -e "主机名: ${GREEN}$(hostname)${NC}"
     echo -e "用户: ${GREEN}$(whoami)${NC}"
     echo -e "工作目录:"
-    echo -e "  - FastAPI: ${YELLOW}/work/fastapi${NC}"
-    echo -e "  - Vue: ${YELLOW}/work/vue${NC}"
+    echo -e "  - FastAPI: ${YELLOW}/home/ai-ks/fastapi${NC}"
+    echo -e "  - Vue: ${YELLOW}/home/ai-ks/vue${NC}"
     echo ""
     echo -e "项目版本:"
-    if [[ -f /work/fastapi/main.py ]]; then
-        local version=$(grep -oP 'VERSION\s*=\s*"\K[^"]+' /work/fastapi/main.py 2>/dev/null || echo "未知")
+    if [[ -f /home/ai-ks/fastapi/main.py ]]; then
+        local version=$(grep -oP 'VERSION\s*=\s*"\K[^"]+' /home/ai-ks/fastapi/main.py 2>/dev/null || echo "未知")
         echo -e "  - 后端版本: ${GREEN}${version}${NC}"
     fi
-    if [[ -f /work/vue/package.json ]]; then
-        local version=$(grep -oP '"version":\s*"\K[^"]+' /work/vue/package.json 2>/dev/null || echo "未知")
+    if [[ -f /home/ai-ks/vue/package.json ]]; then
+        local version=$(grep -oP '"version":\s*"\K[^"]+' /home/ai-ks/vue/package.json 2>/dev/null || echo "未知")
         echo -e "  - 前端版本: ${GREEN}${version}${NC}"
     fi
 }
@@ -73,7 +73,7 @@ ai-ks-help() {
     echo -e "${CYAN}=== AI-KS 快捷命令 ===${NC}"
     echo ""
     echo -e "${GREEN}目录导航:${NC}"
-    echo "  cdwork      - 进入 /work 目录"
+    echo "  cdwork      - 进入 /home/ai-ks 目录"
     echo "  cdfastapi   - 进入 FastAPI 项目"
     echo "  cdvue       - 进入 Vue 项目"
     echo ""
