@@ -94,6 +94,13 @@ resource "docker_container" "ssh_claude" {
 
   env = ["USERPASSWD=${var.user_password}"]
 
+  # 挂载 Claude 配置到容器用户家目录
+  volumes {
+    host_path      = abspath("${path.module}/.claude.json")
+    container_path = "/home/${var.username}/.claude.json"
+    read_only      = true
+  }
+
   dynamic "volumes" {
     for_each = local.resolved_mounts
     content {
