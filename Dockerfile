@@ -11,7 +11,10 @@ ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends openssh-server curl ca-certificates gnupg \
+    && apt-get install -y --no-install-recommends \
+      openssh-server curl ca-certificates gnupg \
+      vim git wget unzip less jq \
+      procps iputils-ping net-tools lsof tree \
     && mkdir -p /etc/apt/keyrings \
     && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
       | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
