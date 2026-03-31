@@ -98,7 +98,7 @@ resource "docker_container" "ssh_claude" {
   volumes {
     host_path      = abspath("${path.module}/.claude.json")
     container_path = "/home/${var.username}/.claude.json"
-    read_only      = true
+    read_only      = false
   }
 
   dynamic "volumes" {
